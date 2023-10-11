@@ -1,5 +1,5 @@
 jobs:
-  build_job:
+  build-job:
     runs-on: ${{matrix.os}}
       strategy:
         matrix:

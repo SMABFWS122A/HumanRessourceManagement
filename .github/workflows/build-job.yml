@@ -1,5 +1,8 @@
+on:
+  workflow_call:
+
 jobs:
-  build-job:
+  build_job:
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
@@ -10,11 +13,11 @@ jobs:
       uses: actions/checkout@v4
     
     - name: Set up JDK 17
-    uses: actions/setup-java@v3
-    with:
-      java-version: '17'
-      distribution: 'temurin'
-      cache: 'maven'
-    
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven'
+      
     - name: Run the Maven verify phase 
-    run: mvn verify
+      run: mvn verify

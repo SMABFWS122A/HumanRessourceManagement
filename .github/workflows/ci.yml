@@ -8,10 +8,4 @@ on:
     
 jobs:
   build:
-    runs-on: ${{matrix.os}}
-      strategy:
-        matrix:
-          os: [ windows-latest, macOS-latest ]
-    steps:
-    - name: Executing build job
-      uses: .github/workflows/build-job.yml
+    uses: .github/workflows/build-job.yml@main

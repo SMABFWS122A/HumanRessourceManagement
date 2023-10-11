@@ -1,9 +1,9 @@
 jobs:
   build-job:
     runs-on: ${{matrix.os}}
-      strategy:
-        matrix:
-          os: [ windows-latest, macOS-latest ]
+    strategy:
+      matrix:
+        os: [ windows-latest, macOS-latest ]
       
     steps:
     - name: Checkout Sources

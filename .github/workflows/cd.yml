@@ -12,7 +12,8 @@ jobs:
           os: [ windows-latest, macOS-latest ]
     steps:
       - name: Executing the build-job
-        uses: .github/workflows/build-job.yml@main
+        uses: ./.github/workflows/build-job.yml
+      
       - name: Building the jar
         run: mkdir staging && cp target/*.jar staging
       

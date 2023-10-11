@@ -6,10 +6,10 @@ on:
     
 jobs:
   deploy:
-   runs-on: ${{matrix.os}}
-      strategy:
-        matrix:
-          os: [ windows-latest, macOS-latest ]
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ windows-latest, macOS-latest ]
     steps:
       - name: Executing the build-job
         uses: ./.github/workflows/build-job.yml
@@ -17,7 +17,7 @@ jobs:
       - name: Building the jar
         run: mkdir staging && cp target/*.jar staging
       
-      - name:
+      - name: Upload artifact
         uses: actions/upload-actifact@v3
         with:
           name: Artifact

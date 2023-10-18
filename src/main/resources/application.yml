@@ -8,3 +8,10 @@ spring:
     driverClassName: org.h2.Driver
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+  flyway:
+    url: jdbc:h2:file:./../../../h2.database
+    user: sa
+    password: password
+    schemas: public
+    baseline-on-migrate: true
+

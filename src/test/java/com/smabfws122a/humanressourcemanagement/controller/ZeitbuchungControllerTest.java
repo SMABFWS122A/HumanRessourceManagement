@@ -19,8 +19,7 @@ import java.sql.Time;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -66,8 +65,6 @@ public class ZeitbuchungControllerTest {
     @Test
     @Order(1)
     void getZeitbuchungen_checkNumberOfEntitiesBeforeAddingTestData_thenStatusOkAndEmptyList() throws Exception {
-        ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
-        String body = objectWriter.writeValueAsString(validKommenBuchung);
         MvcResult mvcResult = this.mockMvc.perform(
                         get("/zeitbuchungen")
                                 .accept(MediaType.APPLICATION_JSON))
@@ -104,8 +101,6 @@ public class ZeitbuchungControllerTest {
     @Test
     @Order(3)
     void getZeitbuchungen_checkNumberOfEntitiesAfterAddingTestData_thenStatusOkAndSize2() throws Exception {
-        ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
-        String body = objectWriter.writeValueAsString(validKommenBuchung);
         MvcResult mvcResult = this.mockMvc.perform(
                         get("/zeitbuchungen")
                                 .accept(MediaType.APPLICATION_JSON))
@@ -170,13 +165,33 @@ public class ZeitbuchungControllerTest {
 
     @Test
     @Order(7)
+    void deleteZeitbuchungenById_checkNumberOfEntitiesAfterDeletingOneTestData_thenStatusOkAndSize1() throws Exception {
+        this.mockMvc.perform(
+                        delete("/zeitbuchung/" + 2)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                        get("/zeitbuchungen")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        List<Zeitbuchung> result = objectMapper.readValue(contentAsString, new TypeReference<>() {
+        });
+        assertThat(result).hasSize(1);
+    }
+
+    @Test
+    @Order(8)
     @Sql(statements = {
             "DELETE FROM zeitbuchung",
             "ALTER SEQUENCE zeitbuchung_id_seq RESTART;"
     })
     void getZeitbuchungen_checkNumberOfEntitiesAfterDeletingTestData_thenStatusOkAndSize0() throws Exception {
-        ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
-        String body = objectWriter.writeValueAsString(validKommenBuchung);
         MvcResult mvcResult = this.mockMvc.perform(
                         get("/zeitbuchungen")
                                 .accept(MediaType.APPLICATION_JSON))

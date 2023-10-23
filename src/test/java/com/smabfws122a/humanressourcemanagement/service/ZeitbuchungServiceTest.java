@@ -115,6 +115,19 @@ public class ZeitbuchungServiceTest {
 
     @Order(7)
     @Test
+    void deleteZeitbuchungById_whenSuccessful_thenSizeMustBe1() {
+        //arrange
+        var expectedEntities = 1;
+        //actual
+        service.deleteZeitbuchungById(2);
+
+        var actualEntities = service.getAllZeitbuchungen();
+        //assert
+        assertEquals(expectedEntities, actualEntities.size());
+    }
+
+    @Order(8)
+    @Test
     @Sql(statements = {
             "DELETE FROM zeitbuchung",
             "ALTER SEQUENCE zeitbuchung_id_seq RESTART;"

@@ -1,8 +1,6 @@
 package com.smabfws122a.humanressourcemanagement.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +14,7 @@ import java.sql.Time;
 public class Zeitbuchung {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private Time uhrzeit;
     private Date datum;

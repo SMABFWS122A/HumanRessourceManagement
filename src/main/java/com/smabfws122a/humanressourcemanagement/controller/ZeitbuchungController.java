@@ -11,7 +11,7 @@ import java.util.List;
 public class ZeitbuchungController {
 
     @Autowired
-    ZeitbuchungService service;
+    private ZeitbuchungService service;
 
     @PostMapping(value = "/zeitbuchung")
     public Integer addZeitbuchung(@RequestBody Zeitbuchung zeitbuchung){

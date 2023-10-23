@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ZeitbuchungServiceTest {
 
     @Autowired
-    ZeitbuchungService service;
+    private ZeitbuchungService service;
 
-    Zeitbuchung zeitbuchungKommen = new Zeitbuchung();
-    Zeitbuchung zeitbuchungGehen = new Zeitbuchung();
+    private final Zeitbuchung zeitbuchungKommen = new Zeitbuchung();
+    private final Zeitbuchung zeitbuchungGehen = new Zeitbuchung();
 
     @BeforeAll
     void setUp(){

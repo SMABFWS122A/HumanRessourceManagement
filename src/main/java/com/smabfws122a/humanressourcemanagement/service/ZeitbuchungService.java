@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class ZeitbuchungService {
     @Autowired
-    ZeitbuchungRepository repository;
+    private ZeitbuchungRepository repository;
 
     public Integer addZeitbuchung(Zeitbuchung zeitbuchung){
         return repository.save(zeitbuchung).getId();

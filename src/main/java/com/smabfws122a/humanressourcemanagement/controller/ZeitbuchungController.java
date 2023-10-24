@@ -32,9 +32,8 @@ public class ZeitbuchungController {
     public Integer updateZeitbuchung(@RequestBody Zeitbuchung zeitbuchung){
         return service.updateZeitbuchung(zeitbuchung);
     }
-
-    @DeleteMapping(value = "/zeibuchung/{id}")
-    public void deleteZeitbuchundByIs(@PathVariable Integer id){
+    @DeleteMapping(value = "/zeitbuchung/{id}")
+    public void deleteZeitbuchundById(@PathVariable Integer id){
         service.deleteZeitbuchungById(id);
     }
 }

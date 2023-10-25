@@ -1,3 +1,5 @@
+CREATE SEQUENCE IF NOT EXISTS zeitbuchung_id_seq START WITH 1 INCREMENT BY 1;
+
 CREATE TABLE zeitbuchung(
         id INTEGER NOT NULL PRIMARY KEY,
         uhrzeit TIME NOT NULL,

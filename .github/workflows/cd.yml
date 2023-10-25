@@ -16,9 +16,3 @@ jobs:
       
       - name: Building the jar
         run: mkdir staging && cp target/*.jar staging
-      
-      - name: Upload artifact
-        uses: actions/upload-actifact@v3
-        with:
-          name: Artifact
-          path: staging

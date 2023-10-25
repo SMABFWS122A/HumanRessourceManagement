@@ -2,25 +2,10 @@ name: Java CI with maven
 
 on:
   push:
-    branches: [ master ]
+    branches: [ develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ develop, release ]
     
 jobs:
   build:
-  
-    runs-on: windows-latest
-
-    steps:
-    - name: Checkout Sources
-      uses: actions/checkout@v4
-
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: 'maven'
-
-    - name: Run the Maven verify phase 
-      run: mvn --batch-mode --update-snapshots verify
+    uses: ./.github/workflows/build-job.yml

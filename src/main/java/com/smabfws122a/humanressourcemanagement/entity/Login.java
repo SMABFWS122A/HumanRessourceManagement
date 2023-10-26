@@ -14,7 +14,7 @@ public class Login {
     @Id
     private String email;
     private String passwort;
-    private Integer admin;  //nur 1 oder 0 für true oder false
-    private Integer peronalnummmer;
+    private Boolean admin;
+    private Integer personalnummer;
 
 }

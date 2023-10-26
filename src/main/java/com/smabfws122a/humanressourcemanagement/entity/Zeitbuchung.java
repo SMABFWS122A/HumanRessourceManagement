@@ -9,7 +9,6 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Entity
-@Table(name = "zeitbuchung")
 @Getter
 @Setter
 public class Zeitbuchung {
@@ -18,7 +17,6 @@ public class Zeitbuchung {
     @GeneratedValue(generator = "zeitbuchung-generator")
     @GenericGenerator(
             name = "zeitbuchung-generator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = "sequence_name", value = "zeitbuchung_id_seq"),
                     @org.hibernate.annotations.Parameter(name = "initial_value", value = "1"),

@@ -9,7 +9,6 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Entity
-@Table(name = "zeitbuchung")
 @Getter
 @Setter
 public class Zeitbuchung {

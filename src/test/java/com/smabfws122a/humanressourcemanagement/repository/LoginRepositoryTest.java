@@ -63,7 +63,7 @@ public class LoginRepositoryTest {
     }
 
     @Test
-    void update_whenSuccesfull_thenEntityHasNewUhrzeit(){
+    void update_whenSuccesfull_thenEntityIsNowAdmin(){
         // arrange
         var updateAdmin = new Login();
         updateAdmin.setPersonalnummer(1000);

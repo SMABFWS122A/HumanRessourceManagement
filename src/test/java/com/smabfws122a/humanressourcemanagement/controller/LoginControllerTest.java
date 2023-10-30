@@ -99,7 +99,7 @@ public class LoginControllerTest {
 
     @Test
     @Order(3)
-    void getAllLogin_checkNumberOfEntitiesAfterAddingTestData_thenStatusOkAndSize7() throws Exception {
+    void getAllLogin_checkNumberOfEntitiesAfterAddingTestData_thenStatusOkAndSize8() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
                         get("/login")
                                 .accept(MediaType.APPLICATION_JSON))
@@ -163,7 +163,7 @@ public class LoginControllerTest {
 
     @Test
     @Order(7)
-    void deleteLoginByEmail_checkNumberOfEntitiesAfterDeletingOneTestData_thenStatusOkAndSize6() throws Exception {
+    void deleteLoginByEmail_checkNumberOfEntitiesAfterDeletingOneTestData_thenStatusOkAndSize7() throws Exception {
         this.mockMvc.perform(
                         delete("/login/" + "monikaschmitz10@mail.de")
                                 .accept(MediaType.APPLICATION_JSON)
@@ -189,7 +189,7 @@ public class LoginControllerTest {
             "DELETE FROM login WHERE email = 'monikaschmitz10@mail.de'",
             "DELETE FROM login WHERE email = 'hansmueller.admin10@mail.de'"
     })
-    void getAllLogin_checkNumberOfEntitiesAfterDeletingTestData_thenStatusOkAndSize5() throws Exception {
+    void getAllLogin_checkNumberOfEntitiesAfterDeletingTestData_thenStatusOkAndSize6() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
                         get("/login")
                                 .accept(MediaType.APPLICATION_JSON))

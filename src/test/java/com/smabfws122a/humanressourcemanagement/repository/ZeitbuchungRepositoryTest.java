@@ -21,6 +21,8 @@ public class ZeitbuchungRepositoryTest {
 
     Zeitbuchung zeitbuchungKommen = new Zeitbuchung();
     Zeitbuchung zeitbuchungGehen = new Zeitbuchung();
+    Zeitbuchung zeitbuchungKommenForOtherPersonalnummer = new Zeitbuchung();
+
 
     @BeforeAll
     void setUp(){
@@ -36,15 +38,21 @@ public class ZeitbuchungRepositoryTest {
         zeitbuchungGehen.setBuchungsart("gehen");
         zeitbuchungGehen.setPersonalnummer(100);
         repository.saveAndFlush(zeitbuchungGehen);
+
+        zeitbuchungKommenForOtherPersonalnummer.setUhrzeit(Time.valueOf("19:52:00"));
+        zeitbuchungKommenForOtherPersonalnummer.setDatum(Date.valueOf("2023-10-23"));
+        zeitbuchungKommenForOtherPersonalnummer.setBuchungsart("gehen");
+        zeitbuchungKommenForOtherPersonalnummer.setPersonalnummer(200);
+        repository.saveAndFlush(zeitbuchungKommenForOtherPersonalnummer);
     }
 
     @Test
     void smokeTest(){ assertThat(repository).isNotNull(); }
 
     @Test
-    void findAll_whenFindAll_thenResultHasSize2(){
+    void findAll_whenFindAll_thenResultHasSize3(){
         // arrange
-        var expectedSize = 2;
+        var expectedSize = 3;
         // act
         var actual = repository.findAll();
         // assert
@@ -61,6 +69,19 @@ public class ZeitbuchungRepositoryTest {
         assertThat(actual.get().getDatum()).isEqualTo(Date.valueOf("2023-10-23"));
         assertThat(actual.get().getBuchungsart()).isEqualTo("kommen");
         assertThat(actual.get().getPersonalnummer()).isEqualTo(100);
+    }
+
+    @Test
+    void findAllByPersonalnummerAndDatum_whenFound_thenReturnEntitiesWithPersonalnummer100AndSizeShouldBe2(){
+        // act
+        var actualEntities = repository.findAllByPersonalnummerAndDatum(100, Date.valueOf("2023-10-23"));
+        // assert
+        for (var actualEntity: actualEntities
+             ) {
+            assertThat(actualEntity.getPersonalnummer()).isEqualTo(100);
+        }
+        assertThat(actualEntities).hasSize(2);
+
     }
 
     @Test

@@ -8,11 +8,13 @@ import com.smabfws122a.humanressourcemanagement.repository.GleitzeitRepository;
 import com.smabfws122a.humanressourcemanagement.repository.MitarbeiterRepository;
 import com.smabfws122a.humanressourcemanagement.repository.ZeitbuchungRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GleitzeitService {
@@ -29,16 +31,17 @@ public class GleitzeitService {
     @Autowired
     BeschaeftigungsgradRepository beschaeftigungsgradRepository;
 
-    public Gleitzeit getLatestGleitzeitByPersonalnummer(Integer personalnummer) {
+    public Optional<Gleitzeit> getLatestGleitzeitByPersonalnummer(Integer personalnummer) {
+        //Die Funktion wird hier nur zu Testzwecken ausgeführt. Normalerweise Jeden Abend um 22:00Uhr
         addGleitzeitForEachMitarbeiter();
         return repository.findFirstByPersonalnummerOrderByDatumDescZeitstempelDesc(personalnummer);
     }
 
-    private void addGleitzeit(Gleitzeit gleitzeit){
+    public void addGleitzeit(Gleitzeit gleitzeit){
         repository.save(gleitzeit);
     }
 
-    //@Scheduled(cron = "0 0 22 * * *") //Jeden Tag um 22:00 Uhr
+    @Scheduled(cron = "0 0 22 * * *") //Jeden Tag um 22:00 Uhr
     //@Scheduled(cron = "0 0 * * * *")  //Zu Beginn jeder Stunde
     //@Scheduled(cron = "*/30 * * * * *") //Alle 30 Sekunden
     private void addGleitzeitForEachMitarbeiter(){
@@ -54,10 +57,9 @@ public class GleitzeitService {
     }
 
     private Integer calculateNewGleitzeitsaldo(Mitarbeiter mitarbeiter) {
-        var datumVomVortag = Date.valueOf(LocalDate.now().minusDays(1));
-        var zeitbuchungen = zeitbuchungRepository.findAllByPersonalnummerAndDatum(mitarbeiter.getPersonalnummer(), datumVomVortag);
+        var zeitbuchungen = zeitbuchungRepository.findAllByPersonalnummerAndDatum(mitarbeiter.getPersonalnummer(), Date.valueOf(LocalDate.now()));
         Double sollArbeitszeit = (beschaeftigungsgradRepository.findById(mitarbeiter.getBeschaeftigungsgrad_id()).get().getWochenstunden() / 5) * 60;
-        var gleitzeitsaldoVortag = repository.findFirstByPersonalnummerOrderByDatumDescZeitstempelDesc(mitarbeiter.getPersonalnummer()).getGleitzeitsaldo();
+        var gleitzeitsaldoVortag = repository.findFirstByPersonalnummerOrderByDatumDescZeitstempelDesc(mitarbeiter.getPersonalnummer()).get().getGleitzeitsaldo();
         if (!checkIfZeitbuchungenAreInRightOrder(zeitbuchungen)) return 0;
         var arbeitszeit = calculateArbeitszeitInMinutes(zeitbuchungen);
         var pause = calculatePauseInMinutes(zeitbuchungen);
@@ -72,7 +74,7 @@ public class GleitzeitService {
             {
                 if (!zeitbuchungen.get(i).getBuchungsart().equals("kommen"))
                 {
-                    //Fehelermeldung schmeißen
+                    //Fehelermeldung: Eine Kommenbuchung fehlt! Bitte Korrigieren!
                     return false;
                 }
             }
@@ -81,7 +83,7 @@ public class GleitzeitService {
             {
                 if (!zeitbuchungen.get(i).getBuchungsart().equals("gehen"))
                 {
-                    //Fehelermeldung schmeißen
+                    //Fehelermeldung: Eine Gehenbuchung fehlt! Bitte Korrigieren!
                     return false;
                 }
             }
@@ -108,27 +110,31 @@ public class GleitzeitService {
     private Integer calculateGleitzeitsaldoInMinutes(Integer arbeitszeit, Integer pause, Integer sollArbeitszeit) {
         var gleitzeitsaldo = 0;
         if (arbeitszeit > 360 && arbeitszeit < 390) {
-            if (pause <= (arbeitszeit - 360)) {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (( arbeitszeit - 360) - pause);
+            if ((arbeitszeit - 360 + pause) < 30) {
+                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (arbeitszeit - 360 + pause);
             } else {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - ((arbeitszeit - 360));
+                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (30 - pause);
             }
         } else if ((arbeitszeit >= 390 && arbeitszeit <= 540) && pause < 30) {
             gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (30 - pause);
         } else if (arbeitszeit > 540 && arbeitszeit < 555) {
-            if (pause <= (30 + (arbeitszeit - 540))) {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - ((30 + (arbeitszeit - 540)) - pause);
+            if (pause <= (45 - (arbeitszeit - 540))) {
+                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (45 - pause);
             } else {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - ((arbeitszeit - 540));
+                gleitzeitsaldo = arbeitszeit - sollArbeitszeit;
             }
         } else if ((arbeitszeit >= 555) && pause < 45) {
             if (arbeitszeit > 600){
-                //Fehlermeldung ausgeben
+                //Fehlermeldung: Sie haben die maximale Arbeitszeit für diesen Tag überschritten. <Überschüssige Zeit> wurde nicht berechnet.
                 arbeitszeit = 600;
             }
-            gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (45 - pause);
-        } else if ((arbeitszeit < 600) && pause >= 45) {
-            //Fehlermeldung ausgeben
+            if ((arbeitszeit - 540 + pause) < 45) {
+                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (arbeitszeit - 540 + pause);
+            } else {
+                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (45 - pause);
+            }
+        } else if (arbeitszeit > 600) {
+            //Fehlermeldung: Sie haben die maximale Arbeitszeit für diesen Tag überschritten. <Überschüssige Zeit> wurde nicht berechnet.
             arbeitszeit = 600;
             gleitzeitsaldo = arbeitszeit - sollArbeitszeit;
         } else {

@@ -57,9 +57,10 @@ public class GleitzeitRepositoryTest {
         // act
         var actual = repository.findFirstByPersonalnummerOrderByDatumDescZeitstempelDesc(100);
         // assert
-        assertThat(actual.getGleitzeitsaldo()).isEqualTo(-10);
-        assertThat(actual.getDatum()).isEqualTo(Date.valueOf(LocalDate.now().minusDays(1)));
-        assertThat(actual.getPersonalnummer()).isEqualTo(100);
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getGleitzeitsaldo()).isEqualTo(-10);
+        assertThat(actual.get().getDatum()).isEqualTo(Date.valueOf(LocalDate.now().minusDays(1)));
+        assertThat(actual.get().getPersonalnummer()).isEqualTo(100);
     }
 
 

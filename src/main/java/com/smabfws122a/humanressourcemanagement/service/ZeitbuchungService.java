@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ZeitbuchungService {
@@ -20,10 +21,8 @@ public class ZeitbuchungService {
         return repository.findAll();
     }
 
-    public Zeitbuchung getZeitbuchungById(Integer id) {
-        return repository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Could not find Zeitbuchung with id = " + id)
-        );
+    public Optional<Zeitbuchung> getZeitbuchungById(Integer id) {
+        return repository.findById(id);
     }
 
     public Integer updateZeitbuchung(Zeitbuchung zeitbuchung) {

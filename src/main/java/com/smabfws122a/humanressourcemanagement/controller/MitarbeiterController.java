@@ -3,10 +3,13 @@ package com.smabfws122a.humanressourcemanagement.controller;
 import com.smabfws122a.humanressourcemanagement.entity.Mitarbeiter;
 import com.smabfws122a.humanressourcemanagement.service.MitarbeiterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-    @RestController
+
+@RestController
     public class MitarbeiterController {
 
         @Autowired
@@ -24,7 +27,9 @@ import java.util.List;
 
         @GetMapping(value = "/mitarbeiter/{personalnummer}")
         public Mitarbeiter getMitarbeiterByPersonalnummer(@PathVariable Integer personalnummer){
-            return service.getMitarbeiterByPersonalnummer(personalnummer);
+            return service.getMitarbeiterByPersonalnummer(personalnummer).orElseThrow(
+                    ()-> new ResponseStatusException( HttpStatus.NOT_FOUND, "entity not found"));
+
         }
 
         @PutMapping(value = "/mitarbeiter")

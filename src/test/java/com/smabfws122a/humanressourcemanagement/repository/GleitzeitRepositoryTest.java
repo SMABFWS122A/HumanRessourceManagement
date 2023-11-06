@@ -29,7 +29,7 @@ public class GleitzeitRepositoryTest {
     void setUp(){
 
         gleitzeit1.setGleitzeitsaldo(30);
-        gleitzeit1.setDatum(Date.valueOf(LocalDate.now().minusDays(1)));
+        gleitzeit1.setDatum(Date.valueOf(LocalDate.now().minusDays(2)));
         gleitzeit1.setPersonalnummer(100);
         repository.saveAndFlush(gleitzeit1);
 

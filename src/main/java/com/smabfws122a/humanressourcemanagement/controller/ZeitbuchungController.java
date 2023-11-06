@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -20,9 +21,9 @@ public class ZeitbuchungController {
         return service.addZeitbuchung(zeitbuchung);
     }
 
-    @GetMapping(value = "/zeitbuchungen")
-    public List<Zeitbuchung> getAllZeitbuchungen(){
-        return service.getAllZeitbuchungen();
+    @GetMapping(value = "/zeitbuchungen/{personalnummer}/{datum}")
+    public List<Zeitbuchung> getAllZeitbuchungenByPersonalnummerAndDatum(@PathVariable Integer personalnummer, @PathVariable Date datum){
+        return service.getAllZeitbuchungenByPersonalnummerAndDatum(personalnummer, datum);
     }
 
     @GetMapping(value = "/zeitbuchung/{id}")

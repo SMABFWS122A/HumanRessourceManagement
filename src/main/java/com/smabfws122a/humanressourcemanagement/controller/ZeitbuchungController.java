@@ -3,7 +3,9 @@ package com.smabfws122a.humanressourcemanagement.controller;
 import com.smabfws122a.humanressourcemanagement.entity.Zeitbuchung;
 import com.smabfws122a.humanressourcemanagement.service.ZeitbuchungService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -25,7 +27,8 @@ public class ZeitbuchungController {
 
     @GetMapping(value = "/zeitbuchung/{id}")
     public Zeitbuchung getZeitbuchungById(@PathVariable Integer id){
-        return service.getZeitbuchungById(id);
+        return service.getZeitbuchungById(id).orElseThrow(
+                ()-> new ResponseStatusException( HttpStatus.NOT_FOUND, "entity not found"));
     }
 
     @PutMapping(value = "/zeitbuchung")

@@ -132,7 +132,6 @@ public class MitarbeiterControllerTest {
 
     @Test
     @Order(5)
-    @Disabled //Test schlägt Fehl, obwohl es gewollt ist das dieser nichts findet
     void getMitarbeiterByPersonalnummer_entityWithIdNotFound_thenNotFound() throws Exception {
         this.mockMvc.perform(get("/mitarbeiter/" + 999)
                         .accept(MediaType.APPLICATION_JSON)

@@ -11,7 +11,6 @@ import java.sql.Date;
 import java.sql.Time;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -83,16 +82,15 @@ public class ZeitbuchungServiceTest {
         //actual
         var actualEntity = service.getZeitbuchungById(1);
         //assert
-        assertEquals(1, actualEntity.getId());
+        assertThat(actualEntity).isPresent();
+        assertEquals(1, actualEntity.get().getId());
     }
 
     @Order(5)
     @Test
     void getZeitbuchungById_whenEntityNotExists_thenReturnThrowException() {
-        //arrange
-        String expectedMessage = "Could not find Zeitbuchung with id = " + 999;
         //assert
-        assertThatThrownBy(() -> service.getZeitbuchungById(999)).isInstanceOf(IllegalArgumentException.class).hasMessage(expectedMessage);
+        assertThat(service.getZeitbuchungById(999)).isNotPresent();
     }
 
     @Order(6)
@@ -110,7 +108,8 @@ public class ZeitbuchungServiceTest {
         var actualEntity = service.getZeitbuchungById(actualId);
         //assert
         assertThat(actualId).isEqualTo(1);
-        assertThat(actualEntity.getUhrzeit()).isEqualTo(Time.valueOf("08:00:00"));
+        assertThat(actualEntity).isPresent();
+        assertThat(actualEntity.get().getUhrzeit()).isEqualTo(Time.valueOf("08:00:00"));
     }
 
     @Order(7)

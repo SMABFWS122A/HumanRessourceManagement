@@ -3,7 +3,9 @@ package com.smabfws122a.humanressourcemanagement.controller;
 import com.smabfws122a.humanressourcemanagement.entity.Login;
 import com.smabfws122a.humanressourcemanagement.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -25,7 +27,9 @@ public class LoginController {
 
     @GetMapping(value = "/login/{email}")
     public Login getLoginbyEmail(@PathVariable String email){
-        return service.getLoginbyEmail(email);
+        return service.getLoginbyEmail(email).orElseThrow(
+                ()-> new ResponseStatusException( HttpStatus.NOT_FOUND, "entity not found")
+        );
     }
 
     @PutMapping(value = "/login")

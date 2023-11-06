@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LoginService {
@@ -20,10 +21,8 @@ public class LoginService {
         return repository.findAll();
     }
 
-    public Login getLoginbyEmail(String email) {
-        return repository.findById(email).orElseThrow(
-                () -> new IllegalArgumentException("Could not find Login with email = " + email)
-        );
+    public Optional<Login> getLoginbyEmail(String email) {
+        return repository.findById(email);
     }
 
     public String updateLogin(Login login) {

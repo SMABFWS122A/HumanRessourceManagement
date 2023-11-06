@@ -13,6 +13,7 @@ public class Beschaeftigungsgrad {
     private Integer id;
     private String bezeichnung;
     private double wochenstunden;
+    private Integer urlaubsanspruch;
     private Time beginn_arbeitszeitfenster;
     private Time ende_arbeitszeitfenster;
 

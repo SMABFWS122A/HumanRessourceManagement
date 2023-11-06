@@ -7,5 +7,5 @@ import java.sql.Date;
 import java.util.List;
 
 public interface ZeitbuchungRepository extends JpaRepository<Zeitbuchung, Integer> {
-    List<Zeitbuchung> findAllByPersonalnummerAndDatum(Integer personalnumemr, Date datum);
+    List<Zeitbuchung> findAllByPersonalnummerAndDatumOrderByUhrzeitAsc(Integer personalnummer, Date datum);
 }

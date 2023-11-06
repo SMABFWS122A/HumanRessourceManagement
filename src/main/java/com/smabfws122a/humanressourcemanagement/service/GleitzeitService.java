@@ -57,7 +57,7 @@ public class GleitzeitService {
     }
 
     private Integer calculateNewGleitzeitsaldo(Mitarbeiter mitarbeiter) {
-        var zeitbuchungen = zeitbuchungRepository.findAllByPersonalnummerAndDatum(mitarbeiter.getPersonalnummer(), Date.valueOf(LocalDate.now()));
+        var zeitbuchungen = zeitbuchungRepository.findAllByPersonalnummerAndDatumOrderByUhrzeitAsc(mitarbeiter.getPersonalnummer(), Date.valueOf(LocalDate.now()));
         Double sollArbeitszeit = (beschaeftigungsgradRepository.findById(mitarbeiter.getBeschaeftigungsgrad_id()).get().getWochenstunden() / 5) * 60;
         var gleitzeitsaldoVortag = repository.findFirstByPersonalnummerOrderByDatumDescZeitstempelDesc(mitarbeiter.getPersonalnummer()).get().getGleitzeitsaldo();
         if (!checkIfZeitbuchungenAreInRightOrder(zeitbuchungen)) return 0;

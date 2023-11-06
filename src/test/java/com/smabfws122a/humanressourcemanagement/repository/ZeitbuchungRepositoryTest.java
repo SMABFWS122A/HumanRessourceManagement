@@ -74,7 +74,7 @@ public class ZeitbuchungRepositoryTest {
     @Test
     void findAllByPersonalnummerAndDatum_whenFound_thenReturnEntitiesWithPersonalnummer100AndSizeShouldBe2(){
         // act
-        var actualEntities = repository.findAllByPersonalnummerAndDatum(100, Date.valueOf("2023-10-23"));
+        var actualEntities = repository.findAllByPersonalnummerAndDatumOrderByUhrzeitAsc(100, Date.valueOf("2023-10-23"));
         // assert
         for (var actualEntity: actualEntities
              ) {

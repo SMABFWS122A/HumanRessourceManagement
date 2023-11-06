@@ -129,7 +129,6 @@ public class LoginControllerTest {
 
     @Test
     @Order(5)
-    @Disabled //Test schlägt Fehl, obwohl es gewollt ist das dieser nichts findet
     void getLoginByEmail_entityWithIdNotFound_thenNotFound() throws Exception {
         this.mockMvc.perform(get("/login/" + "mail@miallll.de")
                         .accept(MediaType.APPLICATION_JSON)

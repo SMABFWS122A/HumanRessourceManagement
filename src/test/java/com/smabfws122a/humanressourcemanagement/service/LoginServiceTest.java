@@ -1,7 +1,6 @@
 package com.smabfws122a.humanressourcemanagement.service;
 
 import com.smabfws122a.humanressourcemanagement.entity.Login;
-import com.smabfws122a.humanressourcemanagement.entity.Mitarbeiter;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +8,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -83,16 +81,15 @@ public class LoginServiceTest {
         //actual
         var actualEntity = service.getLoginbyEmail("monikaschmitz10@mail.de");
         //assert
-        assertEquals(200, actualEntity.getPersonalnummer());
+        assertThat(actualEntity).isPresent();
+        assertEquals(200, actualEntity.get().getPersonalnummer());
     }
 
     @Order(5)
     @Test
     void getLoginByEmail_whenEntityNotExists_thenReturnThrowException() {
-        //arrange
-        String expectedMessage = "Could not find Login with email = " + "testmail1@mail.de";
         //assert
-        assertThatThrownBy(() -> service.getLoginbyEmail("testmail1@mail.de")).isInstanceOf(IllegalArgumentException.class).hasMessage(expectedMessage);
+        assertThat(service.getLoginbyEmail("testmail1@mail.de")).isNotPresent();
     }
 
     @Order(6)
@@ -109,7 +106,8 @@ public class LoginServiceTest {
         var actualEntity = service.getLoginbyEmail(actualId);
         //assert
         assertThat(actualId).isEqualTo("monikaschmitz10@mail.de");
-        assertThat(actualEntity.getAdmin()).isEqualTo(true);}
+        assertThat(actualEntity).isPresent();
+        assertThat(actualEntity.get().getAdmin()).isEqualTo(true);}
 
     @Order(7)
     @Test

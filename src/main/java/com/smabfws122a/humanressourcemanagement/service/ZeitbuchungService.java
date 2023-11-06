@@ -5,6 +5,7 @@ import com.smabfws122a.humanressourcemanagement.repository.ZeitbuchungRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +18,8 @@ public class ZeitbuchungService {
         return repository.save(zeitbuchung).getId();
     }
 
-    public List<Zeitbuchung> getAllZeitbuchungen() {
-        return repository.findAll();
+    public List<Zeitbuchung> getAllZeitbuchungenByPersonalnummerAndDatum(Integer personalnummer, Date datum) {
+        return repository.findAllByPersonalnummerAndDatumOrderByUhrzeitAsc(personalnummer, datum);
     }
 
     public Optional<Zeitbuchung> getZeitbuchungById(Integer id) {

@@ -1403,6 +1403,134 @@ public class GleitzeitServiceTest {
 
     @Test
     @Sql(value = {"/db/resetZeitbuchungAndGleitzeit.sql"})
+    @Order(1)
+    void arbeitszeit8Stunden30MinutenWith30MinutenPauseAberGehenbuchungZurPauseVergessenUndSpäterKorrigiert_thenGleitzeitsaldoForThisDayShouldBe0(){
+        //arrange
+        var kommenBegin = new Zeitbuchung();
+        kommenBegin.setUhrzeit(Time.valueOf("07:00:00"));
+        kommenBegin.setDatum(Date.valueOf(LocalDate.now()));
+        kommenBegin.setBuchungsart("kommen");
+        kommenBegin.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(kommenBegin);
+
+        var kommenPause = new Zeitbuchung();
+        kommenPause.setUhrzeit(Time.valueOf("12:30:00"));
+        kommenPause.setDatum(Date.valueOf(LocalDate.now()));
+        kommenPause.setBuchungsart("kommen");
+        kommenPause.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(kommenPause);
+
+        var gehenEnde = new Zeitbuchung();
+        gehenEnde.setUhrzeit(Time.valueOf("15:30:00"));
+        gehenEnde.setDatum(Date.valueOf(LocalDate.now()));
+        gehenEnde.setBuchungsart("gehen");
+        gehenEnde.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(gehenEnde);
+
+        var gehenPause = new Zeitbuchung();
+        gehenPause.setUhrzeit(Time.valueOf("12:00:00"));
+        gehenPause.setDatum(Date.valueOf(LocalDate.now()));
+        gehenPause.setBuchungsart("gehen");
+        gehenPause.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(gehenPause);
+
+        //actual
+        var actual = service.getLatestGleitzeitByPersonalnummer(100);
+
+        //assert
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getGleitzeitsaldo()).isEqualTo(0);
+    }
+
+    @Test
+    @Sql(value = {"/db/resetZeitbuchungAndGleitzeit.sql"})
+    @Order(1)
+    void arbeitszeit8Stunden30MinutenWith30MinutenPauseAberKommenbuchungZuArbeitsbeginnVergessenUndSpäterKorrigiert_thenGleitzeitsaldoForThisDayShouldBe0(){
+        //arrange
+
+        var gehenPause = new Zeitbuchung();
+        gehenPause.setUhrzeit(Time.valueOf("12:00:00"));
+        gehenPause.setDatum(Date.valueOf(LocalDate.now()));
+        gehenPause.setBuchungsart("gehen");
+        gehenPause.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(gehenPause);
+
+        var kommenPause = new Zeitbuchung();
+        kommenPause.setUhrzeit(Time.valueOf("12:30:00"));
+        kommenPause.setDatum(Date.valueOf(LocalDate.now()));
+        kommenPause.setBuchungsart("kommen");
+        kommenPause.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(kommenPause);
+
+        var gehenEnde = new Zeitbuchung();
+        gehenEnde.setUhrzeit(Time.valueOf("15:30:00"));
+        gehenEnde.setDatum(Date.valueOf(LocalDate.now()));
+        gehenEnde.setBuchungsart("gehen");
+        gehenEnde.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(gehenEnde);
+
+        var kommenBegin = new Zeitbuchung();
+        kommenBegin.setUhrzeit(Time.valueOf("07:00:00"));
+        kommenBegin.setDatum(Date.valueOf(LocalDate.now()));
+        kommenBegin.setBuchungsart("kommen");
+        kommenBegin.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(kommenBegin);
+
+
+        //actual
+        var actual = service.getLatestGleitzeitByPersonalnummer(100);
+
+        //assert
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getGleitzeitsaldo()).isEqualTo(0);
+    }
+
+    @Test
+    @Sql(value = {"/db/resetZeitbuchungAndGleitzeit.sql"})
+    @Order(1)
+    void arbeitszeit8Stunden30MinutenWith30MinutenPauseAberReihenfolgeKomplettVerdreht_thenGleitzeitsaldoForThisDayShouldBe0(){
+        //arrange
+        var gehenEnde = new Zeitbuchung();
+        gehenEnde.setUhrzeit(Time.valueOf("15:30:00"));
+        gehenEnde.setDatum(Date.valueOf(LocalDate.now()));
+        gehenEnde.setBuchungsart("gehen");
+        gehenEnde.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(gehenEnde);
+
+        var kommenPause = new Zeitbuchung();
+        kommenPause.setUhrzeit(Time.valueOf("12:30:00"));
+        kommenPause.setDatum(Date.valueOf(LocalDate.now()));
+        kommenPause.setBuchungsart("kommen");
+        kommenPause.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(kommenPause);
+
+        var gehenPause = new Zeitbuchung();
+        gehenPause.setUhrzeit(Time.valueOf("12:00:00"));
+        gehenPause.setDatum(Date.valueOf(LocalDate.now()));
+        gehenPause.setBuchungsart("gehen");
+        gehenPause.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(gehenPause);
+
+        var kommenBegin = new Zeitbuchung();
+        kommenBegin.setUhrzeit(Time.valueOf("07:00:00"));
+        kommenBegin.setDatum(Date.valueOf(LocalDate.now()));
+        kommenBegin.setBuchungsart("kommen");
+        kommenBegin.setPersonalnummer(100);
+        zeitbuchungService.addZeitbuchung(kommenBegin);
+
+
+        //actual
+        var actual = service.getLatestGleitzeitByPersonalnummer(100);
+
+        //assert
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getGleitzeitsaldo()).isEqualTo(0);
+    }
+
+
+
+    @Test
+    @Sql(value = {"/db/resetZeitbuchungAndGleitzeit.sql"})
     @Order(2)
     void resetZeitbuchungAndGleitzeit(){
     }

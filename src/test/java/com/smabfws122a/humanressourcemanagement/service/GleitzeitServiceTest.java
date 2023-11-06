@@ -48,6 +48,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -75,6 +76,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -102,6 +104,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -143,6 +146,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -184,6 +188,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -211,6 +216,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -252,6 +258,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -293,6 +300,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -320,6 +328,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -361,6 +370,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -402,6 +412,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -429,6 +440,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -471,6 +483,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -513,6 +526,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -582,6 +596,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -624,6 +639,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -666,6 +682,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -749,6 +766,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -777,6 +795,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -805,6 +824,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -846,6 +866,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -887,6 +908,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -928,6 +950,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -969,6 +992,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1010,6 +1034,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1051,6 +1076,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1079,6 +1105,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1120,6 +1147,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1161,6 +1189,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1202,6 +1231,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1243,6 +1273,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1284,6 +1315,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1353,6 +1385,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1394,6 +1427,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenEnde);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1435,6 +1469,7 @@ public class GleitzeitServiceTest {
         zeitbuchungService.addZeitbuchung(gehenPause);
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1478,6 +1513,7 @@ public class GleitzeitServiceTest {
 
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
@@ -1520,13 +1556,13 @@ public class GleitzeitServiceTest {
 
 
         //actual
+        service.addGleitzeitForEachMitarbeiter();
         var actual = service.getLatestGleitzeitByPersonalnummer(100);
 
         //assert
         assertThat(actual).isPresent();
         assertThat(actual.get().getGleitzeitsaldo()).isEqualTo(0);
     }
-
 
 
     @Test

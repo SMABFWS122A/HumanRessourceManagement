@@ -33,7 +33,7 @@ public class GleitzeitService {
 
     public Optional<Gleitzeit> getLatestGleitzeitByPersonalnummer(Integer personalnummer) {
         //Die Funktion wird hier nur zu Testzwecken ausgeführt. Normalerweise Jeden Abend um 22:00Uhr
-        addGleitzeitForEachMitarbeiter();
+        //addGleitzeitForEachMitarbeiter();
         return repository.findFirstByPersonalnummerOrderByDatumDescZeitstempelDesc(personalnummer);
     }
 
@@ -44,7 +44,7 @@ public class GleitzeitService {
     @Scheduled(cron = "0 0 22 * * *") //Jeden Tag um 22:00 Uhr
     //@Scheduled(cron = "0 0 * * * *")  //Zu Beginn jeder Stunde
     //@Scheduled(cron = "*/30 * * * * *") //Alle 30 Sekunden
-    private void addGleitzeitForEachMitarbeiter(){
+    public void addGleitzeitForEachMitarbeiter(){
         var mitarbeiterList = mitarbeiterRepository.findAll();
         for (var mitarbeiter: mitarbeiterList
         ) {

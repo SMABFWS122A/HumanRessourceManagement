@@ -23,7 +23,7 @@ public class Gleitzeit {
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = "sequence_name", value = "gleitzeit_id_seq"),
-                    @org.hibernate.annotations.Parameter(name = "initial_value", value = "1"),
+                    @org.hibernate.annotations.Parameter(name = "initial_value", value = "6"),
                     @org.hibernate.annotations.Parameter(name = "increment_size", value = "1")
             }
     )

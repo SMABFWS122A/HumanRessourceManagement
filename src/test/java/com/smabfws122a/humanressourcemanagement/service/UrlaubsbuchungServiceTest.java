@@ -1,6 +1,5 @@
 package com.smabfws122a.humanressourcemanagement.service;
 
-import com.smabfws122a.humanressourcemanagement.entity.Mitarbeiter;
 import com.smabfws122a.humanressourcemanagement.entity.Urlaubsbuchung;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +29,12 @@ public class UrlaubsbuchungServiceTest {
 
     private final Urlaubsbuchung urlaubsbuchung10 = new Urlaubsbuchung();
     private final Urlaubsbuchung urlaubsbuchung20 = new Urlaubsbuchung();
-    private final Mitarbeiter mitarbeiter10 = new Mitarbeiter();
+
 
 
     @BeforeAll
     void setUp() {
-        mitarbeiter10.setPersonalnummer(-1);
-        mitarbeiter10.setVorname("Max");
-        mitarbeiter10.setNachname("Meier");
-        mitarbeiter10.setEmail("maxmeier@email.com");
-        mitarbeiter10.setBeschaeftigungsgrad_id(1);
+
 
         urlaubsbuchung10.setVonDatum(Date.valueOf(LocalDate.now().minusDays(2)));
         urlaubsbuchung10.setBisDatum(Date.valueOf(LocalDate.now().plusDays(4)));
@@ -49,7 +44,7 @@ public class UrlaubsbuchungServiceTest {
         urlaubsbuchung20.setVonDatum(Date.valueOf(LocalDate.now()));
         urlaubsbuchung20.setBisDatum(Date.valueOf(LocalDate.now()));
         urlaubsbuchung20.setBuchungsart("Tarifurlaub");
-        urlaubsbuchung20.setPersonalnummer(-1);
+        urlaubsbuchung20.setPersonalnummer(400);
     }
 
     @Test
@@ -139,7 +134,7 @@ public class UrlaubsbuchungServiceTest {
     @Test
     void getUrlaubstageByPersonalnummerAndMonatAndJahr_whenFound_thenReturnListofDates() {
         //actual
-        var actual = service.getUrlaubstageByPersonalnummerAndMonatAndJahr(-1,LocalDate.now().with(firstDayOfMonth()));
+        var actual = service.getUrlaubstageByPersonalnummerAndMonatAndJahr(400,LocalDate.now().with(firstDayOfMonth()));
 
         //assert
         assertThat(actual).isNotEmpty();
@@ -150,10 +145,10 @@ public class UrlaubsbuchungServiceTest {
     @Test
     void getAnzahlVerfügbareUrlaubstage_whenFound_thenReturnInteger() {
         //actual
-        var actual = service.getAnzahlVerfügbareUrlaubstage(-1,LocalDate.now().with(firstDayOfMonth()));
+        var actual = service.getAnzahlVerfügbareUrlaubstage(400,LocalDate.now().with(firstDayOfMonth()));
 
         //assert
-        assertThat(actual).isEqualTo(29);
+        assertThat(actual).isEqualTo(19);
 
     }
 
@@ -162,7 +157,7 @@ public class UrlaubsbuchungServiceTest {
     @Sql(statements = {
             "DELETE FROM urlaubsbuchung WHERE id = 7",
             "DELETE FROM urlaubsbuchung WHERE id = 8",
-            "DELETE FROM mitarbeiter WHERE personalnummer = 10"
+            "ALTER SEQUENCE urlaubsbuchung_id_seq RESTART WITH 7;"
     })
     void getAllLogin_checkNumberOfEntitiesAfterDeletingTestData_must6() {
         //arrange

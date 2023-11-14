@@ -1,5 +1,6 @@
 package com.smabfws122a.humanressourcemanagement.service;
 
+import com.smabfws122a.humanressourcemanagement.entity.Fehlermeldung;
 import com.smabfws122a.humanressourcemanagement.entity.Gleitzeit;
 import com.smabfws122a.humanressourcemanagement.entity.Mitarbeiter;
 import com.smabfws122a.humanressourcemanagement.entity.Zeitbuchung;
@@ -31,9 +32,13 @@ public class GleitzeitService {
     @Autowired
     BeschaeftigungsgradRepository beschaeftigungsgradRepository;
 
+    @Autowired
+    UrlaubsbuchungService urlaubsbuchungService;
+
+    @Autowired
+    FehlermeldungService fehlermeldungService;
+
     public Optional<Gleitzeit> getLatestGleitzeitByPersonalnummer(Integer personalnummer) {
-        //Die Funktion wird hier nur zu Testzwecken ausgeführt. Normalerweise Jeden Abend um 22:00Uhr
-        //addGleitzeitForEachMitarbeiter();
         return repository.findFirstByPersonalnummerOrderByDatumDescZeitstempelDesc(personalnummer);
     }
 
@@ -42,8 +47,6 @@ public class GleitzeitService {
     }
 
     @Scheduled(cron = "0 0 22 * * *") //Jeden Tag um 22:00 Uhr
-    //@Scheduled(cron = "0 0 * * * *")  //Zu Beginn jeder Stunde
-    //@Scheduled(cron = "*/30 * * * * *") //Alle 30 Sekunden
     public void addGleitzeitForEachMitarbeiter(){
         var mitarbeiterList = mitarbeiterRepository.findAll();
         for (var mitarbeiter: mitarbeiterList
@@ -57,24 +60,31 @@ public class GleitzeitService {
     }
 
     private Integer calculateNewGleitzeitsaldo(Mitarbeiter mitarbeiter) {
-        var zeitbuchungen = zeitbuchungRepository.findAllByPersonalnummerAndDatumOrderByUhrzeitAsc(mitarbeiter.getPersonalnummer(), Date.valueOf(LocalDate.now()));
-        Double sollArbeitszeit = (beschaeftigungsgradRepository.findById(mitarbeiter.getBeschaeftigungsgrad_id()).get().getWochenstunden() / 5) * 60;
         var gleitzeitsaldoVortag = repository.findFirstByPersonalnummerOrderByDatumDescZeitstempelDesc(mitarbeiter.getPersonalnummer()).get().getGleitzeitsaldo();
-        if (!checkIfZeitbuchungenAreInRightOrder(zeitbuchungen)) return 0;
+        if(urlaubsbuchungService.getUrlaubsbuchungVorhanden(mitarbeiter.getPersonalnummer(), LocalDate.now()))
+        {
+            return gleitzeitsaldoVortag;
+        }
+        var zeitbuchungen = zeitbuchungRepository.findAllByPersonalnummerAndDatumOrderByUhrzeitAsc(mitarbeiter.getPersonalnummer(),Date.valueOf(LocalDate.now()));
+        Double sollArbeitszeit = (beschaeftigungsgradRepository.findById(mitarbeiter.getBeschaeftigungsgrad_id()).get().getWochenstunden() / 5) * 60;
+        if (!checkIfZeitbuchungenAreInRightOrder(zeitbuchungen, mitarbeiter)) return 0;
         var arbeitszeit = calculateArbeitszeitInMinutes(zeitbuchungen);
         var pause = calculatePauseInMinutes(zeitbuchungen);
-        var gleitzeitsaldo = calculateGleitzeitsaldoInMinutes(arbeitszeit, pause, sollArbeitszeit.intValue());
+        var gleitzeitsaldo = calculateGleitzeitsaldoInMinutes(arbeitszeit, pause, sollArbeitszeit.intValue(), mitarbeiter);
         return gleitzeitsaldoVortag + gleitzeitsaldo;
     }
 
-    private boolean checkIfZeitbuchungenAreInRightOrder(List<Zeitbuchung> zeitbuchungen){
+    private boolean checkIfZeitbuchungenAreInRightOrder(List<Zeitbuchung> zeitbuchungen, Mitarbeiter mitarbeiter){
         for (int i = 0; i < zeitbuchungen.size(); i++)
         {
             if(i%2==0)
             {
                 if (!zeitbuchungen.get(i).getBuchungsart().equals("kommen"))
                 {
-                    //Fehelermeldung: Eine Kommenbuchung fehlt! Bitte Korrigieren!
+                    var fehlermeldung = new Fehlermeldung();
+                    fehlermeldung.setFehlermeldung("Kommenbuchung fehlt! Bitte Korrigieren!");
+                    fehlermeldung.setPersonalnummer(mitarbeiter.getPersonalnummer());
+                    fehlermeldungService.addFehlermeldung(fehlermeldung);
                     return false;
                 }
             }
@@ -83,7 +93,10 @@ public class GleitzeitService {
             {
                 if (!zeitbuchungen.get(i).getBuchungsart().equals("gehen"))
                 {
-                    //Fehelermeldung: Eine Gehenbuchung fehlt! Bitte Korrigieren!
+                    var fehlermeldung = new Fehlermeldung();
+                    fehlermeldung.setFehlermeldung("Gehenbuchung fehlt! Bitte Korrigieren!");
+                    fehlermeldung.setPersonalnummer(mitarbeiter.getPersonalnummer());
+                    fehlermeldungService.addFehlermeldung(fehlermeldung);
                     return false;
                 }
             }
@@ -107,7 +120,7 @@ public class GleitzeitService {
         return (int) pause / 60000;
     }
 
-    private Integer calculateGleitzeitsaldoInMinutes(Integer arbeitszeit, Integer pause, Integer sollArbeitszeit) {
+    private Integer calculateGleitzeitsaldoInMinutes(Integer arbeitszeit, Integer pause, Integer sollArbeitszeit, Mitarbeiter mitarbeiter) {
         var gleitzeitsaldo = 0;
         if (arbeitszeit > 360 && arbeitszeit < 390) {
             if ((arbeitszeit - 360 + pause) < 30) {
@@ -125,7 +138,10 @@ public class GleitzeitService {
             }
         } else if ((arbeitszeit >= 555) && pause < 45) {
             if (arbeitszeit > 600){
-                //Fehlermeldung: Sie haben die maximale Arbeitszeit für diesen Tag überschritten. <Überschüssige Zeit> wurde nicht berechnet.
+                var fehlermeldung = new Fehlermeldung();
+                fehlermeldung.setFehlermeldung("Die maximale Arbeitszeit von 10 Stunden wurde überschritten und auf 10 Stunden gekappt.");
+                fehlermeldung.setPersonalnummer(mitarbeiter.getPersonalnummer());
+                fehlermeldungService.addFehlermeldung(fehlermeldung);
                 arbeitszeit = 600;
             }
             if ((arbeitszeit - 540 + pause) < 45) {
@@ -134,7 +150,10 @@ public class GleitzeitService {
                 gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (45 - pause);
             }
         } else if (arbeitszeit > 600) {
-            //Fehlermeldung: Sie haben die maximale Arbeitszeit für diesen Tag überschritten. <Überschüssige Zeit> wurde nicht berechnet.
+            var fehlermeldung = new Fehlermeldung();
+            fehlermeldung.setFehlermeldung("Die maximale Arbeitszeit von 10 Stunden wurde überschritten und auf 10 Stunden gekappt.");
+            fehlermeldung.setPersonalnummer(mitarbeiter.getPersonalnummer());
+            fehlermeldungService.addFehlermeldung(fehlermeldung);
             arbeitszeit = 600;
             gleitzeitsaldo = arbeitszeit - sollArbeitszeit;
         } else {

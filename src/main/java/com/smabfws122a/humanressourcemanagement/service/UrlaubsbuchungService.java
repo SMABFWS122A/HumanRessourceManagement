@@ -40,9 +40,6 @@ public class UrlaubsbuchungService {
         return repository.save(urlaubsbuchung).getId();
     }
 
-    public void deleteUrlaubsbuchungById(Integer id) {
-        repository.deleteById(id);
-    }
 
 
     public boolean getUrlaubsbuchungVorhanden(Integer personalnummer, LocalDate datum){

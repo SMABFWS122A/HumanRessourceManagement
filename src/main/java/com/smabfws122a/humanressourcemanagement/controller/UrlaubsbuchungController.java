@@ -38,10 +38,6 @@ public class UrlaubsbuchungController {
         return service.updateUrlaubsbuchung(urlaubsbuchung);
     }
 
-    @DeleteMapping(value = "/urlaubsbuchung/{id}")
-    public void deleteUrlaubsbuchungById(@PathVariable Integer id){
-        service.deleteUrlaubsbuchungById(id);
-    }
 
     @GetMapping(value = "/urlaubsbuchungen/{personalnummer}/{datum}")
     public List<LocalDate>  getUrlaubstageByPersonalnummerAndMonatAndJahr(@PathVariable Integer personalnummer, @PathVariable LocalDate datum){

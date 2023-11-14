@@ -158,21 +158,7 @@ public class UrlaubsbuchungServiceTest {
 
     }
 
-
     @Order(10)
-    @Test
-    void deleteUrlaubsbuchungById_whenSuccessful_thenSizeMustBe7() {
-        //arrange
-        var expectedEntities = 7;
-        //actual
-        service.deleteUrlaubsbuchungById(8);
-
-        var actualEntities = service.getAllUrlaubsbuchungen();
-        //assert
-        assertEquals(expectedEntities, actualEntities.size());
-    }
-
-    @Order(11)
     @Test
     @Sql(statements = {
             "DELETE FROM urlaubsbuchung WHERE id = 7",

@@ -3,7 +3,6 @@ package com.smabfws122a.humanressourcemanagement.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.smabfws122a.humanressourcemanagement.entity.Mitarbeiter;
 import com.smabfws122a.humanressourcemanagement.entity.Urlaubsbuchung;
 import com.smabfws122a.humanressourcemanagement.entity.Zeitbuchung;
 import org.junit.jupiter.api.*;
@@ -42,17 +41,10 @@ public class UrlaubsbuchungControllerTest {
     private final Urlaubsbuchung validUrlaubsbuchung10= new Urlaubsbuchung();
     private final Urlaubsbuchung validUrlaubsbuchung20 = new Urlaubsbuchung();
     private final Urlaubsbuchung updatedUrlaubsbuchung10 = new Urlaubsbuchung();
-    private final Mitarbeiter mitarbeiter10 = new Mitarbeiter();
-
 
 
     @BeforeAll
     void setUp(){
-        mitarbeiter10.setPersonalnummer(-4);
-        mitarbeiter10.setVorname("Max");
-        mitarbeiter10.setNachname("Meier");
-        mitarbeiter10.setEmail("maxmeier@email.com");
-        mitarbeiter10.setBeschaeftigungsgrad_id(1);
 
         validUrlaubsbuchung10.setVonDatum(Date.valueOf(LocalDate.now().minusDays(2)));
         validUrlaubsbuchung10.setBisDatum(Date.valueOf(LocalDate.now().plusDays(4)));

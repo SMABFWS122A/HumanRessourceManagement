@@ -72,7 +72,6 @@ public class UrlaubsbuchungServiceTest {
     @Test
     void addUrlaubsbuchung_whenValidModel_thenReturnEntityId() {
         //actual
-        var actualId0 = mitarbeiterService.addMitarbeiter(mitarbeiter10);
         var actualId1 = service.addUrlaubsbuchung(urlaubsbuchung10);
         var actualId2 = service.addUrlaubsbuchung(urlaubsbuchung20);
         //assert

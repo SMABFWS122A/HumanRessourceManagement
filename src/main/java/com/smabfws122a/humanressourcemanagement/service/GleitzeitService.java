@@ -81,10 +81,7 @@ public class GleitzeitService {
             {
                 if (!zeitbuchungen.get(i).getBuchungsart().equals("kommen"))
                 {
-                    var fehlermeldung = new Fehlermeldung();
-                    fehlermeldung.setFehlermeldung("Kommenbuchung fehlt! Bitte Korrigieren!");
-                    fehlermeldung.setPersonalnummer(mitarbeiter.getPersonalnummer());
-                    fehlermeldungService.addFehlermeldung(fehlermeldung);
+                    createExeption("Kommenbuchung fehlt! Bitte Korrigieren!", mitarbeiter);
                     return false;
                 }
             }
@@ -93,15 +90,19 @@ public class GleitzeitService {
             {
                 if (!zeitbuchungen.get(i).getBuchungsart().equals("gehen"))
                 {
-                    var fehlermeldung = new Fehlermeldung();
-                    fehlermeldung.setFehlermeldung("Gehenbuchung fehlt! Bitte Korrigieren!");
-                    fehlermeldung.setPersonalnummer(mitarbeiter.getPersonalnummer());
-                    fehlermeldungService.addFehlermeldung(fehlermeldung);
+                    createExeption("Gehenbuchung fehlt! Bitte Korrigieren!", mitarbeiter);
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    private void createExeption(String fehlermeldungText, Mitarbeiter mitarbeiter) {
+        var fehlermeldung = new Fehlermeldung();
+        fehlermeldung.setFehlermeldung(fehlermeldungText);
+        fehlermeldung.setPersonalnummer(mitarbeiter.getPersonalnummer());
+        fehlermeldungService.addFehlermeldung(fehlermeldung);
     }
 
     private Integer calculateArbeitszeitInMinutes(List<Zeitbuchung> zeitbuchungen){
@@ -122,42 +123,68 @@ public class GleitzeitService {
 
     private Integer calculateGleitzeitsaldoInMinutes(Integer arbeitszeit, Integer pause, Integer sollArbeitszeit, Mitarbeiter mitarbeiter) {
         var gleitzeitsaldo = 0;
-        if (arbeitszeit > 360 && arbeitszeit < 390) {
-            if ((arbeitszeit - 360 + pause) < 30) {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (arbeitszeit - 360 + pause);
-            } else {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (30 - pause);
-            }
-        } else if ((arbeitszeit >= 390 && arbeitszeit <= 540) && pause < 30) {
-            gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (30 - pause);
-        } else if (arbeitszeit > 540 && arbeitszeit < 555) {
-            if (pause <= (45 - (arbeitszeit - 540))) {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (45 - pause);
-            } else {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit;
-            }
-        } else if ((arbeitszeit >= 555) && pause < 45) {
-            if (arbeitszeit > 600){
-                var fehlermeldung = new Fehlermeldung();
-                fehlermeldung.setFehlermeldung("Die maximale Arbeitszeit von 10 Stunden wurde überschritten und auf 10 Stunden gekappt.");
-                fehlermeldung.setPersonalnummer(mitarbeiter.getPersonalnummer());
-                fehlermeldungService.addFehlermeldung(fehlermeldung);
-                arbeitszeit = 600;
-            }
-            if ((arbeitszeit - 540 + pause) < 45) {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (arbeitszeit - 540 + pause);
-            } else {
-                gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (45 - pause);
-            }
-        } else if (arbeitszeit > 600) {
-            var fehlermeldung = new Fehlermeldung();
-            fehlermeldung.setFehlermeldung("Die maximale Arbeitszeit von 10 Stunden wurde überschritten und auf 10 Stunden gekappt.");
-            fehlermeldung.setPersonalnummer(mitarbeiter.getPersonalnummer());
-            fehlermeldungService.addFehlermeldung(fehlermeldung);
-            arbeitszeit = 600;
-            gleitzeitsaldo = arbeitszeit - sollArbeitszeit;
+        if (arbeitszeit > 360 && arbeitszeit < 390) { //Arbeitszeit liegt zwischen 6:00 und 6:30 Stunden
+            gleitzeitsaldo = calculateGLeitzeitsaldoWhenArbeitszeitIsBetween6And6_30Hours(arbeitszeit, pause, sollArbeitszeit);
+        } else if ((arbeitszeit >= 390 && arbeitszeit <= 540) && pause < 30) { //Arbeitszeit liegt zwischen 6:30 und 9:00 Stunden + Mehr als 30 Minuten Pause
+            gleitzeitsaldo = calculateGleitszeitsaldoWhenArbeitszeitIsBetween6_30And9HoursAndPauseIsHigher30Minutes(arbeitszeit, pause, sollArbeitszeit);
+        } else if (arbeitszeit > 540 && arbeitszeit < 555) { //Arbeitszeit liegt zwischen 9:00 und 9:15 Stunden
+            gleitzeitsaldo = calculateGleitzeitsaldoWhenArbeitszeitIsBetween9And9_15Hours(arbeitszeit, pause, sollArbeitszeit);
+        } else if ((arbeitszeit >= 555) && pause < 45) { //Arbeitszeit liegt über 9:14 Stunden + Mehr als 44 Minuten Pause
+            gleitzeitsaldo = calculateGleitzeitsaldoWhenArbeitszeitIsHigher9_14HoursAndIsHigher45Minutes(arbeitszeit, pause, sollArbeitszeit, mitarbeiter);
+        } else if (arbeitszeit > 600) { //Arbeitszeit liegt über 10:00 Stunden
+            gleitzeitsaldo = calculateGleitzeitsaldoWhenArbeitszeitIsHigher10Hours(sollArbeitszeit, mitarbeiter);
         } else {
             gleitzeitsaldo = arbeitszeit - sollArbeitszeit;
+            createExeption("Keine Fehler in der Zeitbewertung.", mitarbeiter);
+        }
+        return gleitzeitsaldo;
+    }
+
+    private Integer calculateGleitzeitsaldoWhenArbeitszeitIsHigher10Hours(Integer sollArbeitszeit, Mitarbeiter mitarbeiter) {
+        int gleitzeitsaldo;
+        Integer arbeitszeit;
+        createExeption("Die maximale Arbeitszeit von 10 Stunden wurde überschritten und auf 10 Stunden gekappt.", mitarbeiter);
+        arbeitszeit = 600;
+        gleitzeitsaldo = arbeitszeit - sollArbeitszeit;
+        return gleitzeitsaldo;
+    }
+
+    private Integer calculateGleitzeitsaldoWhenArbeitszeitIsHigher9_14HoursAndIsHigher45Minutes(Integer arbeitszeit, Integer pause, Integer sollArbeitszeit, Mitarbeiter mitarbeiter) {
+        int gleitzeitsaldo;
+        if (arbeitszeit > 600){
+            createExeption("Die maximale Arbeitszeit von 10 Stunden wurde überschritten und auf 10 Stunden gekappt.", mitarbeiter);
+            arbeitszeit = 600;
+        }
+        if ((arbeitszeit - 540 + pause) < 45) {
+            gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (arbeitszeit - 540 + pause);
+        } else {
+            gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (45 - pause);
+        }
+        return gleitzeitsaldo;
+    }
+
+    private Integer calculateGleitzeitsaldoWhenArbeitszeitIsBetween9And9_15Hours(Integer arbeitszeit, Integer pause, Integer sollArbeitszeit) {
+        int gleitzeitsaldo;
+        if (pause <= (45 - (arbeitszeit - 540))) {
+            gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (45 - pause);
+        } else {
+            gleitzeitsaldo = arbeitszeit - sollArbeitszeit;
+        }
+        return gleitzeitsaldo;
+    }
+
+    private Integer calculateGleitszeitsaldoWhenArbeitszeitIsBetween6_30And9HoursAndPauseIsHigher30Minutes(Integer arbeitszeit, Integer pause, Integer sollArbeitszeit) {
+        int gleitzeitsaldo;
+        gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (30 - pause);
+        return gleitzeitsaldo;
+    }
+
+    private Integer calculateGLeitzeitsaldoWhenArbeitszeitIsBetween6And6_30Hours(Integer arbeitszeit, Integer pause, Integer sollArbeitszeit) {
+        int gleitzeitsaldo;
+        if ((arbeitszeit - 360 + pause) < 30) {
+            gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (arbeitszeit - 360 + pause);
+        } else {
+            gleitzeitsaldo = arbeitszeit - sollArbeitszeit - (30 - pause);
         }
         return gleitzeitsaldo;
     }

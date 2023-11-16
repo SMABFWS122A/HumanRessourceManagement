@@ -1,6 +1,8 @@
 package com.smabfws122a.humanressourcemanagement.controller;
 
 import com.smabfws122a.humanressourcemanagement.entity.Zeitbuchung;
+import com.smabfws122a.humanressourcemanagement.repository.BeschaeftigungsgradRepository;
+import com.smabfws122a.humanressourcemanagement.service.MitarbeiterService;
 import com.smabfws122a.humanressourcemanagement.service.ZeitbuchungService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,13 +13,24 @@ import java.sql.Date;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class ZeitbuchungController {
 
     @Autowired
     private ZeitbuchungService service;
 
+    @Autowired
+    private MitarbeiterService mitarbeiterService;
+
+    @Autowired
+    private BeschaeftigungsgradRepository beschaeftigungsgradRepository;
+
     @PostMapping(value = "/zeitbuchung")
     public Integer addZeitbuchung(@RequestBody Zeitbuchung zeitbuchung){
+        var beschaeftigungsgradId = mitarbeiterService.getMitarbeiterByPersonalnummer(zeitbuchung.getPersonalnummer()).get().getBeschaeftigungsgrad_id();
+        if(zeitbuchung.getUhrzeit().getTime() < beschaeftigungsgradRepository.findById(beschaeftigungsgradId).get().getBeginn_arbeitszeitfenster().getTime() ||
+                zeitbuchung.getUhrzeit().getTime() > beschaeftigungsgradRepository.findById(beschaeftigungsgradId).get().getEnde_arbeitszeitfenster().getTime())
+            throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Arbeiten zu dieser Zeit nicht erlaubt!");
         return service.addZeitbuchung(zeitbuchung);
     }
 

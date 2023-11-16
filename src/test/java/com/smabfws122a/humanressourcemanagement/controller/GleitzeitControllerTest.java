@@ -23,9 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GleitzeitControllerTest {
 
-//Vor dem Ausfüheren der Tests muss sichergestellt werden, dass die Methode:
-//'addGleitzeitForEachMitarbeiter();' im GleitzeitService auskommentiert wurde.
-
     @Autowired
     private MockMvc mockMvc;
 

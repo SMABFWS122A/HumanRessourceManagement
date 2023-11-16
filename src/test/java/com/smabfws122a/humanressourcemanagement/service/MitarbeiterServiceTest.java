@@ -8,7 +8,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -83,16 +82,15 @@ public class MitarbeiterServiceTest {
         //actual
         var actualEntity = service.getMitarbeiterByPersonalnummer(10);
         //assert
-        assertEquals(10, actualEntity.getPersonalnummer());
+        assertThat(actualEntity).isPresent();
+        assertEquals(10, actualEntity.get().getPersonalnummer());
     }
 
     @Order(5)
     @Test
     void getMitarbeiterByPersonalnummer_whenEntityNotExists_thenReturnThrowException() {
-        //arrange
-        String expectedMessage = "Could not find Mitarbeiter with personalnummer = " + 9999;
         //assert
-        assertThatThrownBy(() -> service.getMitarbeiterByPersonalnummer(9999)).isInstanceOf(IllegalArgumentException.class).hasMessage(expectedMessage);
+        assertThat(service.getMitarbeiterByPersonalnummer(9999)).isNotPresent();
     }
 
     @Order(6)
@@ -110,7 +108,8 @@ public class MitarbeiterServiceTest {
         var actualEntity = service.getMitarbeiterByPersonalnummer(actualId);
         //assert
         assertThat(actualId).isEqualTo(10);
-        assertThat(actualEntity.getBeschaeftigungsgrad_id()).isEqualTo(3);}
+        assertThat(actualEntity).isPresent();
+        assertThat(actualEntity.get().getBeschaeftigungsgrad_id()).isEqualTo(3);}
 
     @Order(7)
     @Test

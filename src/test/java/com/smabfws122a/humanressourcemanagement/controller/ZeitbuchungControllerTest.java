@@ -64,9 +64,9 @@ public class ZeitbuchungControllerTest {
 
     @Test
     @Order(1)
-    void getZeitbuchungen_checkNumberOfEntitiesBeforeAddingTestData_thenStatusOkAndEmptyList() throws Exception {
+    void getAllZeitbuchungenByPersonalnummerAndDatum_checkNumberOfEntitiesBeforeAddingTestData_thenStatusOkAndEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-                        get("/zeitbuchungen")
+                        get("/zeitbuchungen/"+ 100 + "/" + Date.valueOf("2023-10-23"))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -100,9 +100,9 @@ public class ZeitbuchungControllerTest {
 
     @Test
     @Order(3)
-    void getZeitbuchungen_checkNumberOfEntitiesAfterAddingTestData_thenStatusOkAndSize2() throws Exception {
+    void getAllZeitbuchungenByPersonalnummerAndDatum_checkNumberOfEntitiesAfterAddingTestData_thenStatusOkAndSize2() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-                        get("/zeitbuchungen")
+                        get("/zeitbuchungen/"+ 100 + "/" + Date.valueOf("2023-10-23"))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -174,7 +174,7 @@ public class ZeitbuchungControllerTest {
                 .andExpect(status().isOk());
 
         MvcResult mvcResult = this.mockMvc.perform(
-                        get("/zeitbuchungen")
+                        get("/zeitbuchungen/"+ 100 + "/" + Date.valueOf("2023-10-23"))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -191,9 +191,9 @@ public class ZeitbuchungControllerTest {
             "DELETE FROM zeitbuchung",
             "ALTER SEQUENCE zeitbuchung_id_seq RESTART;"
     })
-    void getZeitbuchungen_checkNumberOfEntitiesAfterDeletingTestData_thenStatusOkAndSize0() throws Exception {
+    void getAllZeitbuchungenByPersonalnummerAndDatum_checkNumberOfEntitiesAfterDeletingTestData_thenStatusOkAndSize0() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-                        get("/zeitbuchungen")
+                        get("/zeitbuchungen/"+ 100 + "/" + Date.valueOf("2023-10-23"))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();

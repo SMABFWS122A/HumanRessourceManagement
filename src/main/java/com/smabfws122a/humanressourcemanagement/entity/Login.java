@@ -8,11 +8,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Mitarbeiter {
+public class Login {
     @Id
-    private Integer personalnummer;
-    private String vorname;
-    private String nachname;
     private String email;
-    private Integer beschaeftigungsgrad_id;
+    private String passwort;
+    private Boolean admin;
+    private Integer personalnummer;
+
 }

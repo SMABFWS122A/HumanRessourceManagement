@@ -3,7 +3,7 @@ package com.smabfws122a.humanressourcemanagement.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.smabfws122a.humanressourcemanagement.entity.Mitarbeiter;
+import com.smabfws122a.humanressourcemanagement.entity.Fehlermeldung;
 import com.smabfws122a.humanressourcemanagement.entity.Zeitbuchung;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,46 +28,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("integrationtest")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class MitarbeiterControllerTest {
+public class FehlermeldungControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final Mitarbeiter validMitarbeiter10= new Mitarbeiter();
-    private final Mitarbeiter validMitarbeiter20 = new Mitarbeiter();
-    private final Mitarbeiter updatedMitarbeiter = new Mitarbeiter();
+    private final Fehlermeldung validFehlermeldung10= new Fehlermeldung();
+    private final Fehlermeldung validFehlermeldung20 = new Fehlermeldung();
+    private final Fehlermeldung updatedFehlermeldung20 = new Fehlermeldung();
 
 
 
     @BeforeAll
     void setUp(){
-        validMitarbeiter10.setPersonalnummer(10);
-        validMitarbeiter10.setVorname("Max");
-        validMitarbeiter10.setNachname("Meier");
-        validMitarbeiter10.setEmail("maxmeier@email.com");
-        validMitarbeiter10.setBeschaeftigungsgrad_id(1);
+        validFehlermeldung10.setFehlermeldung("FEHLER 10");
+        validFehlermeldung10.setPersonalnummer(200);
 
-        validMitarbeiter20.setPersonalnummer(20);
-        validMitarbeiter20.setVorname("Maria");
-        validMitarbeiter20.setNachname("Meier");
-        validMitarbeiter20.setEmail("mariameier@email.com");
-        validMitarbeiter20.setBeschaeftigungsgrad_id(2);
 
-        updatedMitarbeiter.setPersonalnummer(10);
-        updatedMitarbeiter.setVorname("Max");
-        updatedMitarbeiter.setNachname("Meier");
-        updatedMitarbeiter.setEmail("maxmeier@email.com");
-        updatedMitarbeiter.setBeschaeftigungsgrad_id(3);
+        validFehlermeldung20.setFehlermeldung("FEHLER 20");
+        validFehlermeldung20.setPersonalnummer(100);
+
+        updatedFehlermeldung20.setFehlermeldung("FEHLER UPDATED");
+        updatedFehlermeldung20.setPersonalnummer(100);
 
     }
 
     @Test
     @Order(1)
-    void getMitarbeiter_checkNumberOfEntitiesBeforeAddingTestData_thenStatusOkAndMustBe5() throws Exception {
+    void getFehlermeldung_checkNumberOfEntitiesBeforeAddingTestData_thenStatusOkAndMustBe0() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-                        get("/mitarbeiter")
+                        get("/fehlermeldung")
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -75,24 +67,24 @@ public class MitarbeiterControllerTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
         List<Zeitbuchung> result = objectMapper.readValue(contentAsString, new TypeReference<>() {
         });
-        assertThat(result).hasSize(5);
+        assertThat(result).hasSize(0);
     }
 
     @Test
     @Order(2)
-    void postMitarbeiter_whenModelIsValid_thenStatusOk() throws Exception {
+    void postFehlermeldung_whenModelIsValid_thenStatusOk() throws Exception {
         ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
-        String body = objectWriter.writeValueAsString(validMitarbeiter10);
+        String body = objectWriter.writeValueAsString(validFehlermeldung10);
         this.mockMvc.perform(
-                        post("/mitarbeiter")
+                        post("/fehlermeldung")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(body))
                 .andExpect(status().isOk());
 
-        body = objectWriter.writeValueAsString(validMitarbeiter20);
+        body = objectWriter.writeValueAsString(validFehlermeldung20);
         this.mockMvc.perform(
-                        post("/mitarbeiter")
+                        post("/fehlermeldung")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(body))
@@ -101,9 +93,9 @@ public class MitarbeiterControllerTest {
 
     @Test
     @Order(3)
-    void getAllMitarbeiter_checkNumberOfEntitiesAfterAddingTestData_thenStatusOkAndSize7() throws Exception {
+    void getAllFehlermeldung_checkNumberOfEntitiesAfterAddingTestData_thenStatusOkAndSize2() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-                        get("/mitarbeiter")
+                        get("/fehlermeldung")
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -111,29 +103,26 @@ public class MitarbeiterControllerTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
         List<Zeitbuchung> result = objectMapper.readValue(contentAsString, new TypeReference<>() {
         });
-        assertThat(result).hasSize(7);
+        assertThat(result).hasSize(2);
     }
 
     @Test
     @Order(4)
-    void getMitarbeiterByPersonalnummer_whenEntityWithIdFound_ThenOkAndReturnEntity() throws Exception {
+    void getFehlermeldungByPersonalnummer_whenEntityWithIdFound_ThenOkAndReturnEntity() throws Exception {
         this.mockMvc.perform(
-                        get("/mitarbeiter/" + 10)
+                        get("/fehlermeldung/" + 100)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.personalnummer").value(10))
-                .andExpect(jsonPath("$.vorname").value("Max"))
-                .andExpect(jsonPath("$.nachname").value("Meier"))
-                .andExpect(jsonPath("$.email").value("maxmeier@email.com"))
-                .andExpect(jsonPath("$.beschaeftigungsgrad_id").value(1));
+                .andExpect(jsonPath("$.personalnummer").value(100))
+                .andExpect(jsonPath("$.fehlermeldung").value("FEHLER 20"));
     }
 
     @Test
     @Order(5)
-    void getMitarbeiterByPersonalnummer_entityWithIdNotFound_thenNotFound() throws Exception {
-        this.mockMvc.perform(get("/mitarbeiter/" + 999)
+    void getFehlermeldungByEmail_entityWithIdNotFound_thenNotFound() throws Exception {
+        this.mockMvc.perform(get("/fehlermeldung/" + 300)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -141,60 +130,35 @@ public class MitarbeiterControllerTest {
 
     @Test
     @Order(6)
-    void putMitarbeiter_whenModelIsValid_thenBadRequest() throws Exception {
+    void putFehlermeldung_whenModelIsValid_thenBadRequest() throws Exception {
         ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
-        String body = objectWriter.writeValueAsString(updatedMitarbeiter);
+        String body = objectWriter.writeValueAsString(updatedFehlermeldung20);
         this.mockMvc.perform(
-                        post("/mitarbeiter")
+                        post("/fehlermeldung")
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(body))
                 .andExpect(status().isOk());
 
         this.mockMvc.perform(
-                        get("/mitarbeiter/" + 10)
+                        get("/fehlermeldung/" + 100)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.personalnummer").value(10))
-                .andExpect(jsonPath("$.vorname").value("Max"))
-                .andExpect(jsonPath("$.nachname").value("Meier"))
-                .andExpect(jsonPath("$.email").value("maxmeier@email.com"))
-                .andExpect(jsonPath("$.beschaeftigungsgrad_id").value(3));
-    }
-
-    @Test
-    @Order(7)
-    void deleteMitarbeiterByPersonalnummer_checkNumberOfEntitiesAfterDeletingOneTestData_thenStatusOkAndSize6() throws Exception {
-        this.mockMvc.perform(
-                        delete("/mitarbeiter/" + 20)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        MvcResult mvcResult = this.mockMvc.perform(
-                        get("/mitarbeiter")
-                                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String contentAsString = mvcResult.getResponse().getContentAsString();
-        List<Zeitbuchung> result = objectMapper.readValue(contentAsString, new TypeReference<>() {
-        });
-        assertThat(result).hasSize(6);
+                .andExpect(jsonPath("$.personalnummer").value(100))
+                .andExpect(jsonPath("$.fehlermeldung").value("FEHLER UPDATED"));
     }
 
     @Test
     @Order(8)
     @Sql(statements = {
-            "DELETE FROM mitarbeiter WHERE Personalnummer = 10",
-            "DELETE FROM mitarbeiter WHERE Personalnummer = 20"
+            "DELETE FROM fehlermeldung WHERE personalnummer = 100",
+            "DELETE FROM fehlermeldung WHERE personalnummer = 200"
     })
-    void getAllMitarbeiter_checkNumberOfEntitiesAfterDeletingTestData_thenStatusOkAndSize5() throws Exception {
+    void getAllFehlermeldung_checkNumberOfEntitiesAfterDeletingTestData_thenStatusOkAndSize0() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-                        get("/mitarbeiter")
+                        get("/fehlermeldung")
                                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -202,7 +166,7 @@ public class MitarbeiterControllerTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
         List<Zeitbuchung> result = objectMapper.readValue(contentAsString, new TypeReference<>() {
         });
-        assertThat(result).hasSize(5);
+        assertThat(result).hasSize(0);
     }
 
 }

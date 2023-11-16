@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class MitarbeiterService {
     @Autowired
@@ -19,10 +21,8 @@ public class MitarbeiterService {
         return repository.findAll();
     }
 
-    public Mitarbeiter getMitarbeiterByPersonalnummer(Integer personalnummer) {
-        return repository.findById(personalnummer).orElseThrow(
-                () -> new IllegalArgumentException("Could not find Mitarbeiter with personalnummer = " + personalnummer)
-        );
+    public Optional<Mitarbeiter> getMitarbeiterByPersonalnummer(Integer personalnummer) {
+        return repository.findById(personalnummer);
     }
 
     public Integer updateMitarbeiter(Mitarbeiter mitarbeiter) {

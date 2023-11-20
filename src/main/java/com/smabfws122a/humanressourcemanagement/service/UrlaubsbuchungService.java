@@ -40,23 +40,27 @@ public class UrlaubsbuchungService {
         return repository.save(urlaubsbuchung).getId();
     }
 
-
-
     public boolean getUrlaubsbuchungVorhanden(Integer personalnummer, LocalDate datum){
         return repository.existsUrlaubsbuchungsByPersonalnummerEqualsAndVonDatumIsBeforeAndBisDatumIsAfter(
                 personalnummer,
                 Date.valueOf(datum.plusDays(1)),
                 Date.valueOf(datum.minusDays(1)));
     }
+    public List<Urlaubsbuchung> getUrlaubsbuchungenByPersonalnummerAndZeitraum(Integer personalnummer, LocalDate anfangsDatum, LocalDate endDatum){
+        return repository.findAllByPersonalnummerEqualsAndVonDatumIsBetweenOrPersonalnummerEqualsAndBisDatumIsBetween(
+                personalnummer,
+                Date.valueOf(anfangsDatum),
+                Date.valueOf(endDatum),
+                personalnummer,
+                Date.valueOf(anfangsDatum),
+                Date.valueOf(endDatum));
+    }
     public List<LocalDate> getUrlaubstageByPersonalnummerAndMonatAndJahr(Integer personalnummer, LocalDate datum){
 
-        List<Urlaubsbuchung> urlaubsbuchungen = repository.findAllByPersonalnummerEqualsAndVonDatumIsBetweenOrPersonalnummerEqualsAndBisDatumIsBetween(
-                                personalnummer,
-                                Date.valueOf(datum.minusDays(1)),
-                                Date.valueOf(datum.plusMonths(1)),
-                                personalnummer,
-                                Date.valueOf(datum.minusDays(1)),
-                                Date.valueOf(datum.plusMonths(1)));
+        List<Urlaubsbuchung> urlaubsbuchungen = getUrlaubsbuchungenByPersonalnummerAndZeitraum(
+                                                    personalnummer,
+                                                    datum.minusDays(1),
+                                                    datum.plusMonths(1));
 
         List<LocalDate> urlaubstageImMonat = new ArrayList<>();
         List<LocalDate> urlaubstage = new ArrayList<>();
@@ -68,22 +72,20 @@ public class UrlaubsbuchungService {
                                 .toList();
             for (var urlaubstag: urlaubstage
                  ) {
-                if (urlaubstag.getMonthValue() == datum.getMonthValue()){
+
+                    if (urlaubstag.getMonthValue() == datum.getMonthValue()){
                     urlaubstageImMonat.add(urlaubstag);
-                }
+                    }
             }
         }
         return urlaubstageImMonat;
     }
 
     public Integer getAnzahlVerfügbareUrlaubstage(Integer personalnummer, LocalDate datum){
-        List<Urlaubsbuchung> urlaubsbuchungen = repository.findAllByPersonalnummerEqualsAndVonDatumIsBetweenOrPersonalnummerEqualsAndBisDatumIsBetween(
+        List<Urlaubsbuchung> urlaubsbuchungen = getUrlaubsbuchungenByPersonalnummerAndZeitraum(
                 personalnummer,
-                Date.valueOf(datum.minusDays(1)),
-                Date.valueOf(datum.plusYears(1)),
-                personalnummer,
-                Date.valueOf(datum.minusDays(1)),
-                Date.valueOf(datum.plusYears(1)));
+                datum.minusDays(1),
+                datum.plusYears(1));
 
         List<LocalDate> urlaubstageImJahr = new ArrayList<>();
         List<LocalDate> urlaubstage = new ArrayList<>();

@@ -123,14 +123,38 @@ public class UrlaubsbuchungServiceTest {
 
     @Order(7)
     @Test
-    void getUrlaubsbuchungVorhanden_whenFound_thenReturnTru() {
+    void getUrlaubsbuchungVorhanden_whenFound_thenReturnTrue() {
         //actual
         var actual = service.getUrlaubsbuchungVorhanden(100, LocalDate.now());
         //assert
         assertThat(actual).isTrue();
     }
-
     @Order(8)
+    @Test
+    void getUrlaubsbuchungenByPersonalnummerAndZeitraum_whenFound_thenReturnListofUrlaubsbuchungen(){
+        //actual
+        var actual = service.getUrlaubsbuchungenByPersonalnummerAndZeitraum(
+                                400,
+                                LocalDate.now().with(firstDayOfMonth()).minusDays(1),
+                                LocalDate.now().with(firstDayOfMonth()).plusMonths(1));
+        //assert
+        assertThat(actual).isNotEmpty();
+        assertThat(actual).hasSize(1);
+    }
+
+    @Order(9)
+    @Test
+    void getUrlaubsbuchungenByPersonalnummerAndZeitraum_whenFound_thenReturnEmptyListofUrlaubsbuchungen(){
+        //actual
+        var actual = service.getUrlaubsbuchungenByPersonalnummerAndZeitraum(
+                400,
+                LocalDate.now().with(firstDayOfMonth()).minusYears(10),
+                LocalDate.now().with(firstDayOfMonth()).minusYears(10));
+        //assert
+        assertThat(actual).isEmpty();
+    }
+
+    @Order(10)
     @Test
     void getUrlaubstageByPersonalnummerAndMonatAndJahr_whenFound_thenReturnListofDates() {
         //actual
@@ -141,7 +165,17 @@ public class UrlaubsbuchungServiceTest {
         assertThat(actual).hasSize(1);
     }
 
-    @Order(9)
+    @Order(11)
+    @Test
+    void getUrlaubstageByPersonalnummerAndMonatAndJahr_whenFound_thenReturnEmptyListofDates() {
+        //actual
+        var actual = service.getUrlaubstageByPersonalnummerAndMonatAndJahr(400,LocalDate.now().with(firstDayOfMonth()).minusYears(10));
+
+        //assert
+        assertThat(actual).isEmpty();
+    }
+
+    @Order(12)
     @Test
     void getAnzahlVerfügbareUrlaubstage_whenFound_thenReturnInteger() {
         //actual
@@ -152,7 +186,7 @@ public class UrlaubsbuchungServiceTest {
 
     }
 
-    @Order(10)
+    @Order(13)
     @Test
     @Sql(statements = {
             "DELETE FROM urlaubsbuchung WHERE id = 7",
@@ -167,5 +201,4 @@ public class UrlaubsbuchungServiceTest {
         //assert
         assertEquals(expectedEntities, actualEntities.size());
     }
-
 }
